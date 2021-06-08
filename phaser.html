@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+<body>
+
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 10 }
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+   
+
+    let logo;
+    let cursors;
+    let score = 0;
+    let scoreDisplay; 
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        this.load.setBaseURL('http://labs.phaser.io');
+
+        this.load.image('sky', 'assets/skies/space3.png');
+        this.load.image('logo', 'assets/sprites/phaser3-logo.png');
+        this.load.image('red', 'assets/particles/red.png');
+    }
+
+    //function pause ()
+    //{
+    //    if p
+    //}
+
+    function update ()
+    {
+        if (cursors.left.isDown)
+        {
+            logo.setVelocityX(-240);
+        }
+
+        if (cursors.right.isDown)
+        {
+            logo.setVelocityX(240);
+        }
+        
+        let topLeftX = logo.x - (logo.width / 2);
+        let topLeftY = logo.y - (logo.height / 2);
+        let topRightX = logo.x + (logo.width / 2);
+        let topRightY = logo.y - (logo.height / 2);
+        let bottomLeftX = logo.x - (logo.width / 2);
+        let bottomLeftY = logo.y + (logo.height / 2);
+        let bottomRightX = logo.x + (logo.width / 2);
+        let bottomRightY = logo.y + (logo.height / 2);
+      
+        if (topLeftX <= 4 && topLeftY <= 4)
+        {
+        score++;
+        console.log(score);
+        } 
+        
+        if (topRightX >= 796 && topRightY <= 4)
+        {
+        score++;
+        console.log(score);
+        } 
+        
+        if (bottomLeftX <= 4 && bottomLeftY >= 596)
+        {
+        score++;
+        console.log(score);
+        } 
+
+        if (bottomRightX >= 796 && bottomRightY >= 596)
+        {
+        score++;
+        console.log(score);
+        } 
+        
+        scoreDisplay.setText("SCORE: " + score);
+    }
+    
+    function create ()
+    {
+        cursors = this.input.keyboard.createCursorKeys();
+        this.add.image(400, 300, 'sky');
+        scoreDisplay = this.add.text(330, 0, "SCORE: " + score, { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: '28px' });
+        var particles = this.add.particles('red');
+        
+        var emitter = particles.createEmitter({
+            speed: 100,
+            scale: { start: 3, end: 0 },
+            blendMode: 'ADD'
+        });
+
+        logo = this.physics.add.image(400, 100, 'logo');
+
+        logo.setVelocity(240, 240);
+        logo.setBounce(1, 1);
+        logo.setCollideWorldBounds(true);
+
+        emitter.startFollow(logo);
+    }
+    </script>
+
+</body>
+</html>
